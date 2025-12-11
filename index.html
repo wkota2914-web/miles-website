@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="MILES（マイルズ）は、フライトチケット風のデザインで旅の記録や予定を管理できるアプリです。未来感のあるUIで、旅の思い出を1枚のチケットに。"
+    content="MILES（マイルズ）は、フライトチケット風のデザインで旅の記録や予定を管理できるアプリです。未来感のあるモノクロUIで、旅の思い出を1枚のチケットに。"
   />
 
   <!-- フォント -->
@@ -34,17 +34,13 @@
       --radius-xl: 28px;
       --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
 
-      /* ✈ イントロ用（M の斜め線に沿う軌道） */
-      --plane-angle: 32deg;   /* M の斜め線の角度。微調整したかったら 30〜36 で変えてOK */
+      /* ✈ イントロ用（M ロゴ内の飛行機の角度＆位置） */
+      --plane-angle: 36deg;   /* ロゴの飛行機にかなり近い角度。微調整はここを変える */
       --plane-start-x: 56px;  /* ロゴ中心からのX位置（右＋ 左−） */
       --plane-start-y: -54px; /* ロゴ中心からのY位置（下＋ 上−） */
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -54,18 +50,11 @@
       overflow-x: hidden;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
 
     /* ==================================================
-       ✨ イントロ：Mロゴ画像 ＋ 飛行機 ＋ 光の尾 ＋ ワープ星空
+       ✨ イントロ：Mロゴ画像 ＋ 飛行機 ＋ 飛行機雲 ＋ ワープ星空
        ================================================== */
 
     #splash {
@@ -116,7 +105,7 @@
       justify-content: center;
     }
 
-    /* こたオリジナルの M ロゴ画像 */
+    /* M ロゴ画像（こたのオリジナル） */
     .splash-logo-image {
       width: min(260px, 60vw);
       filter:
@@ -132,78 +121,89 @@
       100% { opacity: 1; transform: scale(1.0); }
     }
 
-    /* ★ 飛行機本体（中に飛行機雲が入る） */
-.splash-plane {
-  position: absolute;
-  font-size: min(44px, 9vw);
-  color: #c4ffd9;
-  text-shadow:
-    0 0 8px rgba(72,255,146,0.95),
-    0 0 22px rgba(72,255,146,1);
-  opacity: 0;
-  transform-origin: center;
-  transform:
-    translate(var(--plane-start-x), var(--plane-start-y))
-    rotate(var(--plane-angle))
-    scale(0.9);
-  animation: plane-fly 1.5s cubic-bezier(0.12, 0.56, 0.32, 1.02) 0.4s forwards;
-}
+    /* 飛行機本体（中に飛行機雲が入る） */
+    .splash-plane {
+      position: absolute;
+      font-size: min(44px, 9vw);
+      color: #c4ffd9;
+      text-shadow:
+        0 0 8px rgba(72,255,146,0.95),
+        0 0 22px rgba(72,255,146,1);
+      opacity: 0;
+      transform-origin: center;
+      transform:
+        translate(var(--plane-start-x), var(--plane-start-y))
+        rotate(var(--plane-angle))
+        scale(0.9);
+      animation: plane-fly 1.5s cubic-bezier(0.12, 0.56, 0.32, 1.02) 0.4s forwards;
+    }
 
-/* ★ 飛行機雲（飛行機に完全追従） */
-.splash-plane .trail {
-  position: absolute;
-  left: -180px;   /* 飛行機の後ろに伸ばす距離 */
-  top: 50%;
-  transform: translateY(-50%) rotate(0deg);
-  width: 180px;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg,
-    rgba(72,255,146,0) 0%,
-    rgba(72,255,146,1) 100%
-  );
-  filter: blur(1.3px);
-  opacity: 0;
-  animation: trail-grow 1.5s ease-out 0.4s forwards;
-}
+    /* 飛行機雲（飛行機に完全追従） */
+    .splash-plane .trail {
+      position: absolute;
+      left: -190px;     /* 飛行機の後ろ方向に伸びる距離 */
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(72,255,146,0) 0%,
+        rgba(72,255,146,1) 100%
+      );
+      filter: blur(1.4px);
+      opacity: 0;
+      animation: trail-grow 1.5s ease-out 0.4s forwards;
+    }
 
-/* 飛行機の移動（Mの斜めに沿う） */
-@keyframes plane-fly {
-  0% {
-    opacity: 0;
-    transform:
-      translate(var(--plane-start-x), var(--plane-start-y))
-      rotate(var(--plane-angle))
-      scale(0.9);
-  }
-  10% { opacity: 1; }
-  60% {
-    transform:
-      translate(calc(var(--plane-start-x) + 140px),
-                calc(var(--plane-start-y) - 140px))
-      rotate(var(--plane-angle))
-      scale(1.05);
-  }
-  100% {
-    opacity: 0;
-    transform:
-      translate(calc(var(--plane-start-x) + 220px),
-                calc(var(--plane-start-y) - 220px))
-      rotate(var(--plane-angle))
-      scale(1.1);
-  }
-}
+    /* 飛行機の移動（M の斜め線に沿う） */
+    @keyframes plane-fly {
+      0% {
+        opacity: 0;
+        transform:
+          translate(var(--plane-start-x), var(--plane-start-y))
+          rotate(var(--plane-angle))
+          scale(0.9);
+      }
+      10% { opacity: 1; }
+      60% {
+        transform:
+          translate(calc(var(--plane-start-x) + 140px),
+                    calc(var(--plane-start-y) - 140px))
+          rotate(var(--plane-angle))
+          scale(1.05);
+      }
+      100% {
+        opacity: 0;
+        transform:
+          translate(calc(var(--plane-start-x) + 220px),
+                    calc(var(--plane-start-y) - 220px))
+          rotate(var(--plane-angle))
+          scale(1.1);
+      }
+    }
 
-/* 飛行機雲アニメーション（飛行機に追従） */
-@keyframes trail-grow {
-  0%   { opacity: 0; width: 0px; }
-  20%  { opacity: 1; width: 80px; }
-  60%  { opacity: 1; width: 180px; }
-  100% { opacity: 0; width: 220px; }
-}
+    /* 飛行機雲アニメーション（飛行機の後ろで伸びる） */
+    @keyframes trail-grow {
+      0%   { opacity: 0; width: 0px; }
+      20%  { opacity: 1; width: 90px; }
+      60%  { opacity: 1; width: 190px; }
+      100% { opacity: 0; width: 230px; }
+    }
+
+    /* イントロ全体フェードアウト */
+    #splash.splash-hide {
+      animation: splash-fadeout 0.9s ease forwards;
+    }
+
+    @keyframes splash-fadeout {
+      0%   { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
 
     /* ==================================================
-       ここから LP 本体（前に作ったデザインそのまま）
+       ここから LP 本体（前に作ったデザイン）
        ================================================== */
 
     .page {
@@ -671,13 +671,14 @@
 </head>
 <body>
 
-  <!-- ✨ イントロ（Mロゴ画像＋飛行機＋光の尾） -->
+  <!-- ✨ イントロ（Mロゴ画像＋飛行機＋飛行機雲） -->
   <div id="splash">
     <div class="splash-inner">
-      <!-- ここに置くロゴ画像：ファイル名を miles-intro-logo.png にして、index.html と同じフォルダへ -->
       <img src="miles-intro-logo.png" alt="MILES logo" class="splash-logo-image" />
-      <div class="splash-plane-trail"></div>
-      <div class="splash-plane">✈</div>
+      <div class="splash-plane">
+        <div class="trail"></div>
+        ✈
+      </div>
     </div>
   </div>
 
@@ -815,7 +816,7 @@
         </div>
       </section>
 
-      <!-- TICKET DESIGN SECTION -->
+      <!-- TICKET DESIGN -->
       <section id="ticket" class="section">
         <div class="section-header">
           <div class="section-eyebrow">TICKET DESIGN</div>
